@@ -27,7 +27,7 @@ export const SERVICES = [
   {
     id: '6',
     name: 'YouTube',
-    logo: '/logos/youtube.png' // Placeholder - you'll need to add this logo
+    logo: '/logos/youtube.png'
   },
   {
     id: '7',
@@ -42,7 +42,7 @@ export const SERVICES = [
   {
     id: '9',
     name: 'Telegram',
-    logo: '/logos/telegram.png' // Placeholder - you'll need to add this logo
+    logo: '/logos/telegram.png'
   },
   {
     id: '10',
