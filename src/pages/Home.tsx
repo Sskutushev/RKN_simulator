@@ -131,7 +131,7 @@ const Home = () => {
                     transform: 'perspective(1000px)'
                   }}
                 >
-                  <img src="/assets/logo.png" alt="Logo" className="w-full h-full object-contain" />
+                  <img src={process.env.PUBLIC_URL + '/assets/logo.png'} alt="Logo" className="w-full h-full object-contain" />
 
                   {/* 3D грани */}
                   <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/20 to-transparent" />
