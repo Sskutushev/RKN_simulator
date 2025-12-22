@@ -74,7 +74,7 @@ const Home = () => {
         <div className="relative z-10 h-full flex flex-col">
 
           {/* Header с балансом */}
-          <div className="pt-[150px] px-4">
+          <div className="pt-12 px-4">
             <motion.button
               onClick={() => setShowRewardMenu(true)}
               whileHover={{ scale: 1.05 }}

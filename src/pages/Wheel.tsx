@@ -66,7 +66,7 @@ const Wheel = () => {
         <div className="relative z-10 h-full flex flex-col">
 
           {/* Header */}
-          <div className="pt-[100px] px-4 flex items-center justify-between">
+          <div className="pt-12 px-4 flex items-center justify-between">
             {/* Кнопка назад */}
             <motion.button
               whileHover={{ scale: 1.1 }}
