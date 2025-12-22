@@ -33,7 +33,7 @@ const ResultPopup = ({ service, onClose }: Props) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 bg-black/70 backdrop-blur-md z-50"
+        className="absolute inset-0 bg-black/70 backdrop-blur-md z-50"
       />
 
       {/* Popup */}
@@ -42,7 +42,7 @@ const ResultPopup = ({ service, onClose }: Props) => {
         animate={{ scale: 1, opacity: 1, rotateY: 0 }}
         exit={{ scale: 0, opacity: 0, rotateY: 180 }}
         transition={{ type: 'spring', damping: 20 }}
-        className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
           z-50 w-[90%] max-w-[340px]
           bg-gradient-to-b from-white via-pink-50 to-rose-50
           rounded-[30px] shadow-2xl p-6 border-4 border-white"

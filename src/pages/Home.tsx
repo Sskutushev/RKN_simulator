@@ -125,13 +125,13 @@ const Home = () => {
                     rotateX: 15
                   }}
                   className="relative w-32 h-32 bg-gradient-to-br from-red-500 via-rose-600 to-red-700
-                    rounded-3xl flex items-center justify-center shadow-2xl"
+                    rounded-3xl flex items-center justify-center shadow-2xl p-4"
                   style={{
                     transformStyle: 'preserve-3d',
                     transform: 'perspective(1000px)'
                   }}
                 >
-                  <span className="text-7xl">🚫</span>
+                  <img src="/assets/logo.png" alt="Logo" className="w-full h-full object-contain" />
 
                   {/* 3D грани */}
                   <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/20 to-transparent" />
@@ -216,8 +216,8 @@ const Home = () => {
 
               {/* Текст */}
               <span className="relative z-10 flex items-center justify-center gap-2">
-                <span className="text-2xl">🎯</span>
                 Начать правосудие
+                <span className="text-2xl">⚖️</span>
               </span>
 
               {/* Пульсирующее свечение */}

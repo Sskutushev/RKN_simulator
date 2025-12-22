@@ -20,26 +20,23 @@ const Wheel = () => {
       alert('Недостаточно монет! 😢');
       return;
     }
-
     if (isSpinning) return;
 
     setIsSpinning(true);
     spendCoins(2);
+    setWinner(null); // Reset winner to allow re-spinning the same result
 
-    // Выбираем случайный сервис
-    const randomIndex = Math.floor(Math.random() * SERVICES.length);
-    const selectedService = SERVICES[randomIndex];
-
-    // Через 5 секунд показываем результат
+    // We need a small delay for the reset to register, then set the new winner
     setTimeout(() => {
-      setWinner(selectedService);
+        const randomIndex = Math.floor(Math.random() * SERVICES.length);
+        const selectedService = SERVICES[randomIndex];
+        setWinner(selectedService); // This starts the animation in Carousel.tsx
 
-      // Через 1.2 сек открываем popup
-      setTimeout(() => {
-        setIsSpinning(false);
-        setShowPopup(true);
-      }, 1200);
-    }, 5000);
+        // After animation is done (5s), show popup
+        setTimeout(() => {
+            setShowPopup(true);
+        }, 5000); // Corresponds to animation duration in Carousel.tsx
+    }, 10);
   };
 
   return (
@@ -143,8 +140,15 @@ const Wheel = () => {
                 />
               )}
 
-              <span className="relative z-10">
-                {isSpinning ? '🎰 Крутится...' : '🎯 Крутить (2 🪙)'}
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {isSpinning ? '🎰 Крутится...' : (
+                  <>
+                    Крутить
+                    <span className="flex items-center gap-1">
+                      (🪙 - 2)
+                    </span>
+                  </>
+                )}
               </span>
             </motion.button>
           </div>
@@ -158,6 +162,7 @@ const Wheel = () => {
             onClose={() => {
               setShowPopup(false);
               setWinner(null);
+              setIsSpinning(false);
             }}
           />
         )}
