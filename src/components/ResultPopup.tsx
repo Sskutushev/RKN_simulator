@@ -35,10 +35,10 @@ const ResultPopup = ({ service, onClose }: Props) => {
 
       {/* Popup */}
       <motion.div
-        initial={{ scale: 0, opacity: 0, rotateY: -180 }}
-        animate={{ scale: 1, opacity: 1, rotateY: 0 }}
-        exit={{ scale: 0, opacity: 0, rotateY: 180 }}
-        transition={{ type: 'spring', damping: 20 }}
+        initial={{ scale: 0, opacity: 0, y: 50 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0, opacity: 0, y: 50 }}
+        transition={{ type: 'spring', damping: 20, stiffness: 300 }}
         className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
           z-50 w-[90%] max-w-[340px]
           bg-gradient-to-b from-white via-pink-50 to-rose-50
@@ -46,6 +46,7 @@ const ResultPopup = ({ service, onClose }: Props) => {
         style={{
           boxShadow: '0 0 60px rgba(255, 62, 108, 0.6)'
         }}
+        onClick={(e) => e.stopPropagation()} // Предотвращаем закрытие при клике внутри попапа
       >
         {/* Логотип с 3D эффектом */}
         <motion.div

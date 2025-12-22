@@ -32,11 +32,11 @@ const Wheel = () => {
 
     // Через 5 секунд показываем результат
     setTimeout(() => {
-      setIsSpinning(false);
       setWinner(selectedService);
 
       // Через 1.2 сек открываем popup
       setTimeout(() => {
+        setIsSpinning(false);
         setShowPopup(true);
       }, 1200);
     }, 5000);

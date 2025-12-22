@@ -20,7 +20,17 @@ const Carousel = ({ isSpinning, winner }: Props) => {
   ];
 
   useEffect(() => {
-    if (isSpinning && winner) {
+    if (isSpinning) {
+      // Анимация вращения при запуске
+      controls.start({
+        y: [-100, -4000], // Начальное смещение и быстрое вращение
+        transition: {
+          duration: 5,
+          ease: "easeOut"
+        }
+      });
+    } else if (winner) {
+      // Плавная остановка на выигрышном элементе
       const winnerIndex = SERVICES.findIndex(s => s.id === winner.id);
       const centerOffset = Math.floor(repeatedServices.length / 2);
 
@@ -30,19 +40,18 @@ const Carousel = ({ isSpinning, winner }: Props) => {
       // Финальная позиция
       const finalPosition = -(centerOffset + winnerIndex) * itemHeight;
 
+      // Анимация плавной остановки
       controls.start({
-        y: [0, -4000, finalPosition],
+        y: finalPosition,
         transition: {
-          duration: 5,
-          ease: [0.25, 0.1, 0.25, 1],
-          times: [0, 0.7, 1]
+          duration: 1,
+          ease: [0.25, 0.1, 0.25, 1] // easeOutCubic
         }
       });
     } else {
       // Начальная позиция
       controls.set({ y: 0 });
     }
-
   }, [isSpinning, winner]);
 
   return (
