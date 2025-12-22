@@ -72,8 +72,8 @@ const centerOffset = Math.floor(repeatedServices.length / 2);
       </motion.div>
 
       {/* Градиентные маски сверху и снизу */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-pink-500/80 to-transparent z-10 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-orange-400/80 to-transparent z-10 pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-pink-500/0 to-transparent z-10 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-orange-400/0 to-transparent z-10 pointer-events-none" />
 
       {/* Барабан */}
       <motion.div
@@ -88,8 +88,8 @@ const centerOffset = Math.floor(repeatedServices.length / 2);
           return (
             <motion.div
               key={`${service.id}-${index}`}
-              className="flex items-center justify-center bg-white/95 backdrop-blur-md
-                rounded-3xl shadow-2xl border-2 border-white/50"
+              className="flex items-center justify-center bg-transparent
+                rounded-3xl shadow-2xl border-2 border-transparent"
               style={{
                 width: '280px',
                 height: '200px',

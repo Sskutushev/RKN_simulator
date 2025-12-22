@@ -75,7 +75,7 @@ const Wheel = () => {
               className="w-12 h-12 bg-white/90 backdrop-blur-md rounded-full
                 shadow-xl flex items-center justify-center"
             >
-              <span className="text-2xl">←</span>
+              <span className="text-2xl leading-none">←</span>
             </motion.button>
 
             {/* Баланс */}
@@ -145,7 +145,7 @@ const Wheel = () => {
                   <>
                     Крутить
                     <span className="flex items-center gap-1">
-                      (🪙 - 2)
+                      🪙 2
                     </span>
                   </>
                 )}
