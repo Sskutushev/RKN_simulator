@@ -42,7 +42,7 @@ const ResultPopup = ({ service, onClose }: Props) => {
           exit={{ scale: 0, opacity: 0, rotateY: 180 }}
           transition={{ type: 'spring', damping: 20 }}
           className="relative z-10 w-full max-w-[340px]
-            bg-soft-white
+            bg-gradient-to-b from-white via-pink-50 to-rose-50
             rounded-[30px] shadow-2xl p-6 border-4 border-white"
           style={{
             boxShadow: '0 0 60px rgba(255, 62, 108, 0.6)'
@@ -73,7 +73,8 @@ const ResultPopup = ({ service, onClose }: Props) => {
           </motion.div>
 
           {/* Название */}
-          <h2 className="text-2xl font-black text-center text-dark-text mb-6">
+          <h2 className="text-2xl font-black text-center bg-gradient-to-r from-pink-600 to-rose-600
+            bg-clip-text text-transparent mb-6">
             {service.name}
           </h2>
 
@@ -81,17 +82,17 @@ const ResultPopup = ({ service, onClose }: Props) => {
           <div className="space-y-3">
             <ActionButton
               label="🚫 Заблокировать"
-              gradient="bg-btn-cotton"
+              gradient="from-red-500 to-red-600"
               onClick={() => handleAction('ban')}
             />
             <ActionButton
               label="🐌 Замедлить"
-              gradient="bg-btn-cotton"
+              gradient="from-orange-500 to-orange-600"
               onClick={() => handleAction('slow')}
             />
             <ActionButton
               label="🔒 Ограничить"
-              gradient="bg-btn-cotton"
+              gradient="from-yellow-500 to-yellow-600"
               onClick={() => handleAction('limit')}
             />
           </div>

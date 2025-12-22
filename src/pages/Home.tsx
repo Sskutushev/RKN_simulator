@@ -16,7 +16,7 @@ const Home = () => {
       <div className="w-full max-w-[375px] min-w-[320px] min-h-screen relative overflow-hidden">
 
         {/* Анимированный градиентный фон */}
-        <div className="absolute inset-0 bg-gradient-cotton bg-[length:200%_200%] animate-gradient-shift" />
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-rose-600 to-orange-400 animate-gradient-shift" />
 
         {/* 3D декоративные элементы на фоне */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -90,7 +90,7 @@ const Home = () => {
               <motion.span
                 animate={{ rotate: [0, 15, -15, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
-                className="text-3xl text-cotton-accent"
+                className="text-3xl"
               >
                 🪙
               </motion.span>
@@ -116,7 +116,7 @@ const Home = () => {
             >
               <div className="relative">
                 {/* Свечение за иконкой */}
-                <div className="absolute inset-0 bg-cotton-accent rounded-3xl blur-3xl opacity-40 animate-pulse" />
+                <div className="absolute inset-0 bg-red-500 rounded-3xl blur-3xl opacity-40 animate-pulse" />
 
                 {/* Сама иконка */}
                 <motion.div
@@ -172,11 +172,11 @@ const Home = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="bg-soft-white backdrop-blur-md rounded-[20px] p-5 shadow-2xl mb-8
+              className="bg-white/95 backdrop-blur-md rounded-[20px] p-5 shadow-2xl mb-8
                 border border-white/50"
             >
-              <p className="text-center text-dark-text leading-relaxed text-sm font-medium">
-                Это <span className="font-black text-cotton-accent">юмористическое приложение</span>
+              <p className="text-center text-gray-800 leading-relaxed text-sm font-medium">
+                Это <span className="font-black text-pink-600">юмористическое приложение</span>
                 {' '}для развлечения. Попробуйте себя в роли сотрудника Роскомнадзора.
               </p>
 
@@ -195,7 +195,8 @@ const Home = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate('/wheel')}
-              className="w-full py-5 bg-btn-cotton text-white font-black text-lg rounded-[90px] shadow-2xl
+              className="w-full py-5 bg-gradient-to-r from-pink-500 to-rose-600
+                text-white font-black text-lg rounded-[90px] shadow-2xl
                 relative overflow-hidden group"
               style={{
                 boxShadow: '0 0 30px rgba(255, 62, 108, 0.5)'
@@ -229,7 +230,7 @@ const Home = () => {
                   duration: 2,
                   repeat: Infinity
                 }}
-                className="absolute inset-0 rounded-[90px] bg-gradient-to-r from-cotton-accent/40 to-cotton-accent/80 blur-xl -z-10"
+                className="absolute inset-0 rounded-[90px] bg-gradient-to-r from-pink-400 to-rose-500 blur-xl -z-10"
               />
             </motion.button>
           </div>

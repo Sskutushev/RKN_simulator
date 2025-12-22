@@ -44,7 +44,7 @@ const Wheel = () => {
       <div className="w-full max-w-[375px] min-w-[320px] min-h-screen relative">
 
         {/* Анимированный фон */}
-        <div className="absolute inset-0 bg-gradient-cotton bg-[length:200%_200%] animate-gradient-shift" />
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-rose-600 to-orange-400 animate-gradient-shift" />
 
         {/* 3D декор */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -93,7 +93,7 @@ const Wheel = () => {
               <motion.span
                 animate={{ rotate: [0, 15, -15, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
-                className="text-3xl text-cotton-accent"
+                className="text-3xl"
               >
                 🪙
               </motion.span>
@@ -122,14 +122,14 @@ const Wheel = () => {
                 w-full py-5 rounded-[90px] font-black text-lg shadow-2xl
                 transition-all duration-300 relative overflow-hidden
                 ${isSpinning || userData.coins < 2
-                  ? 'bg-gray-400 text-dark-text cursor-not-allowed'
-                  : 'bg-btn-cotton text-white'
+                  ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-pink-500 to-rose-600 text-white'
                 }
               `}
               style={{
                 boxShadow: isSpinning || userData.coins < 2
                   ? 'none'
-                  : '0 0 30px rgba(255, 171, 145, 0.6)'
+                  : '0 0 30px rgba(255, 62, 108, 0.6)'
               }}
             >
               {!isSpinning && userData.coins >= 2 && (

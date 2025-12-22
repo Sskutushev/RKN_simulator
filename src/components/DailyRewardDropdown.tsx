@@ -72,7 +72,7 @@ const DailyRewardDropdown = ({ onClose }: Props) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-3">
-          <h3 className="font-bold text-dark-text text-lg">Ежедневная награда</h3>
+          <h3 className="font-bold text-pink-600 text-lg">Ежедневная награда</h3>
           <button 
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 text-2xl"
@@ -81,12 +81,12 @@ const DailyRewardDropdown = ({ onClose }: Props) => {
           </button>
         </div>
         
-        <div className="bg-soft-white rounded-xl p-4 mb-3">
+        <div className="bg-gradient-to-r from-pink-100 to-rose-100 rounded-xl p-4 mb-3">
           <div className="flex items-center justify-center gap-2 mb-2">
             <span className="text-3xl">🎁</span>
             <span className="font-bold text-xl">+10 🪙</span>
           </div>
-          <p className="text-center text-sm text-dark-text">
+          <p className="text-center text-sm text-gray-600">
             Получите 10 монет за вход сегодня!
           </p>
         </div>
@@ -96,13 +96,13 @@ const DailyRewardDropdown = ({ onClose }: Props) => {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
             onClick={claimReward}
-            className="w-full py-3 bg-btn-cotton 
+            className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 
               text-white font-bold rounded-xl shadow-lg"
           >
             Забрать награду
           </motion.button>
         ) : (
-          <div className="text-center py-3 text-dark-text font-medium">
+          <div className="text-center py-3 text-gray-500 font-medium">
             Следующая награда: {timeLeft}
           </div>
         )}
