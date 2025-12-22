@@ -72,8 +72,8 @@ const centerOffset = Math.floor(repeatedServices.length / 2);
       </motion.div>
 
       {/* Градиентные маски сверху и снизу */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-pink-500/0 to-transparent z-10 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-orange-400/0 to-transparent z-10 pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-pink-500/80 to-transparent z-10 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-orange-400/80 to-transparent z-10 pointer-events-none" />
 
       {/* Барабан */}
       <motion.div
@@ -83,7 +83,7 @@ const centerOffset = Math.floor(repeatedServices.length / 2);
         {repeatedServices.map((service, index) => {
           const distanceFromCenter = Math.abs(index - repeatedServices.length / 2);
           const scale = Math.max(0.7, 1 - distanceFromCenter * 0.05);
-          // const opacity = Math.max(0.3, 1 - distanceFromCenter * 0.1); // Removed opacity calculation
+          const opacity = Math.max(0.3, 1 - distanceFromCenter * 0.1); // Re-added opacity calculation
 
           return (
             <motion.div
@@ -93,7 +93,7 @@ const centerOffset = Math.floor(repeatedServices.length / 2);
               style={{
                 width: '280px',
                 height: '200px',
-                // opacity removed from here
+                opacity, // Re-added opacity
                 transform: `scale(${scale})`,
                 boxShadow: `
                   0 10px 30px rgba(0, 0, 0, 0.2),
@@ -105,7 +105,9 @@ const centerOffset = Math.floor(repeatedServices.length / 2);
                 src={service.logo}
                 alt={service.name}
                 className="max-w-[80%] max-h-[80%] object-contain"
-                // filter removed from here
+                style={{
+                  filter: opacity < 0.7 ? 'blur(2px)' : 'none' // Re-added filter
+                }}
               />
             </motion.div>
           );

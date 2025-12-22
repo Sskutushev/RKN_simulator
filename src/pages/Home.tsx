@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useUserData } from '../context/UserDataContext';
 import DailyRewardDropdown from '../components/DailyRewardDropdown';
+import logo from '../assets/logo.png'; // Import the logo
 
 const Home = () => {
   const navigate = useNavigate();
@@ -131,7 +132,7 @@ const Home = () => {
                     transform: 'perspective(1000px)'
                   }}
                 >
-                  <img src={process.env.PUBLIC_URL + '/assets/logo.png'} alt="Logo" className="w-full h-full object-contain" />
+                  <img src={logo} alt="Logo" className="w-full h-full object-contain" />
 
                   {/* 3D грани */}
                   <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/20 to-transparent" />
