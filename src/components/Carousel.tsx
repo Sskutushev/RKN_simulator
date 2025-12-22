@@ -83,17 +83,17 @@ const centerOffset = Math.floor(repeatedServices.length / 2);
         {repeatedServices.map((service, index) => {
           const distanceFromCenter = Math.abs(index - repeatedServices.length / 2);
           const scale = Math.max(0.7, 1 - distanceFromCenter * 0.05);
-          const opacity = Math.max(0.3, 1 - distanceFromCenter * 0.1);
+          // const opacity = Math.max(0.3, 1 - distanceFromCenter * 0.1); // Removed opacity calculation
 
           return (
             <motion.div
               key={`${service.id}-${index}`}
-              className="flex items-center justify-center bg-transparent
-                rounded-3xl shadow-2xl border-2 border-transparent"
+              className="flex items-center justify-center bg-white/95 backdrop-blur-md
+                rounded-3xl shadow-2xl border-2 border-white/50" // Reverted background
               style={{
                 width: '280px',
                 height: '200px',
-                opacity,
+                // opacity removed from here
                 transform: `scale(${scale})`,
                 boxShadow: `
                   0 10px 30px rgba(0, 0, 0, 0.2),
@@ -105,9 +105,7 @@ const centerOffset = Math.floor(repeatedServices.length / 2);
                 src={service.logo}
                 alt={service.name}
                 className="max-w-[80%] max-h-[80%] object-contain"
-                style={{
-                  filter: opacity < 0.7 ? 'blur(2px)' : 'none'
-                }}
+                // filter removed from here
               />
             </motion.div>
           );
