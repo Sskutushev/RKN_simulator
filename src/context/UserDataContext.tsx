@@ -75,14 +75,20 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         if (window.Telegram?.WebApp?.CloudStorage) {
           // Save to Telegram CloudStorage
           await new Promise<void>((resolve) => {
-            window.Telegram.WebApp.CloudStorage.setItem('userData', dataToSave, (error) => {
-              if (error) {
-                console.error('Error saving to CloudStorage:', error);
-                // Fallback to localStorage if CloudStorage fails
-                localStorage.setItem('userData', dataToSave);
-              }
+            if (window.Telegram?.WebApp?.CloudStorage) {
+              window.Telegram.WebApp.CloudStorage.setItem('userData', dataToSave, (error) => {
+                if (error) {
+                  console.error('Error saving to CloudStorage:', error);
+                  // Fallback to localStorage if CloudStorage fails
+                  localStorage.setItem('userData', dataToSave);
+                }
+                resolve();
+              });
+            } else {
+              // Fallback to localStorage if CloudStorage is not available
+              localStorage.setItem('userData', dataToSave);
               resolve();
-            });
+            }
           });
         } else {
           // Fallback to localStorage
