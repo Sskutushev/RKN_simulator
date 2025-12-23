@@ -49,6 +49,9 @@ interface TelegramWebApp {
     removeItems: (keys: string[], callback: (error: Error | null) => void) => void;
     keys: (callback: (error: Error | null, keys: string[]) => void) => void;
   };
+  requestFullscreen?: () => void;
+  disableVerticalSwipes?: () => void;
+  isVersionAtLeast?: (version: string) => boolean;
 }
 
 declare global {
@@ -74,15 +77,22 @@ export const useTelegram = () => {
       tg.ready();
       tg.expand();
 
-      // Для Bot API 8.0+ запрашиваем настоящий Fullscreen (без хедера ТГ)
-      if (tg.isVersionAtLeast('8.0')) {
-        tg.requestFullscreen();
+      // Пытаемся запросить fullscreen, если метод доступен (проверяем через hasOwnProperty)
+      if ('requestFullscreen' in tg && typeof tg.requestFullscreen === 'function') {
+        try {
+          tg.requestFullscreen();
+        } catch (error) {
+          console.warn('requestFullscreen is not supported:', error);
+        }
       }
 
-      // Отключаем вертикальные свипы, чтобы пользователь
-      // случайно не закрыл приложение, когда крутит барабан
-      if (tg.isVersionAtLeast('7.7')) {
-        tg.disableVerticalSwipes();
+      // Пытаемся отключить вертикальные свипы, если метод доступен
+      if ('disableVerticalSwipes' in tg && typeof tg.disableVerticalSwipes === 'function') {
+        try {
+          tg.disableVerticalSwipes();
+        } catch (error) {
+          console.warn('disableVerticalSwipes is not supported:', error);
+        }
       }
 
       // Получаем Safe Area Insets

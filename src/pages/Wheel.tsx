@@ -100,7 +100,11 @@ const Wheel = () => {
             <Carousel
               isSpinning={isSpinning}
               winner={winner}
-              onComplete={handleAnimationComplete}
+              onComplete={() => {
+                // Завершаем спин и показываем попап только после завершения анимации
+                setIsSpinning(false);
+                setShowPopup(true);
+              }}
             />
           </div>
 
