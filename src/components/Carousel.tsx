@@ -84,40 +84,27 @@ const Carousel = ({ isSpinning, winner, onComplete }: Props) => {
       {/* Барабан */}
       <motion.div
         animate={controls}
-        className="flex flex-col items-center py-[230px]"
+        className="flex flex-col items-center gap-5 py-[230px]"
       >
-        {repeatedServices.map((service, index) => {
-          // Рассчитываем положение карточки относительно центра экрана
-          const position = index * STEP;
-          const centerPosition = 230; // Примерно центр визуальной области (с учетом py-[230px])
-          const distanceFromCenter = Math.abs(position - (controls.get('y') || 0) - centerPosition);
-          
-          // Эффект лупы: масштаб и прозрачность в зависимости от расстояния до центра
-          const scale = distanceFromCenter < 100 ? 1.2 : 0.8;
-          const opacity = distanceFromCenter < 100 ? 1 : 0.4;
-
-          return (
-            <div
-              key={`${service.id}-${index}`}
-              className="flex items-center justify-center bg-white/95 backdrop-blur-md
-                rounded-3xl shadow-2xl border-2 border-white/50"
-              style={{
-                width: '280px',
-                height: '180px',
-                transform: `scale(${scale})`,
-                opacity: opacity,
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.5)'
-              }}
-            >
-              <img
-                src={service.logo}
-                alt={service.name}
-                className="max-w-[80%] max-h-[80%] object-contain"
-                loading="lazy"
-              />
-            </div>
-          );
-        })}
+        {repeatedServices.map((service, index) => (
+          <div
+            key={`${service.id}-${index}`}
+            className="flex items-center justify-center bg-white/95 backdrop-blur-md
+              rounded-3xl shadow-2xl border-2 border-white/50"
+            style={{
+              width: '280px',
+              height: '180px',
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.5)'
+            }}
+          >
+            <img
+              src={service.logo}
+              alt={service.name}
+              className="max-w-[80%] max-h-[80%] object-contain"
+              loading="lazy"
+            />
+          </div>
+        ))}
       </motion.div>
     </div>
   );
