@@ -18,22 +18,10 @@ const Wheel = () => {
 
   useEffect(() => {
     if (tg) {
-      // Показываем BackButton
-      tg.BackButton.show();
-
-      const handleBack = () => {
-        tg.HapticFeedback.impactOccurred('light');
-        navigate('/');
-      };
-
-      tg.BackButton.onClick(handleBack);
-
-      return () => {
-        tg.BackButton.offClick(handleBack);
-        tg.BackButton.hide();
-      };
+      // Скрываем BackButton, так как у TMA есть своя навигация
+      tg.BackButton.hide();
     }
-  }, [tg, navigate]);
+  }, [tg]);
 
   const handleSpin = async () => {
     if (userData.coins < 2) {
@@ -81,22 +69,13 @@ const Wheel = () => {
         {/* Контент */}
         <div className="relative z-10 h-full pb-[120px] flex flex-col">
 
-          {/* Header - учитываем Safe Area и BackButton */}
+          {/* Header - учитываем Safe Area, убрана кнопка назад */}
           <div
-            className="px-4 flex items-center justify-between"
+            className="px-4 flex justify-end"
             style={{
               paddingTop: `${safeAreaInsets.top}px`
             }}
           >
-            {/* Кнопка назад */}
-            <button
-              onClick={() => navigate('/')}
-              className="w-12 h-12 bg-white/90 backdrop-blur-md rounded-full
-                shadow-xl flex items-center justify-center hover:scale-110 active:scale-90 transition-transform duration-200"
-            >
-              <span className="text-2xl leading-none">←</span>
-            </button>
-
             {/* Баланс */}
             <button
               onClick={() => {
