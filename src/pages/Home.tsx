@@ -19,16 +19,15 @@ const Home = () => {
   }, [tg]);
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center"
-      style={{
-        paddingTop: `${safeAreaInsets.top}px`,
-        paddingBottom: `${safeAreaInsets.bottom}px`,
-        height: 'var(--tg-viewport-height, 100vh)'
-      }}
-    >
+    <div className="flex flex-col h-[100dvh] overflow-hidden">
       {/* Контейнер на ПОЛНУЮ ширину */}
-      <div className="w-full h-full relative overflow-hidden">
+      <div
+        className="w-full h-full relative overflow-hidden"
+        style={{
+          paddingTop: `${safeAreaInsets.top}px`,
+          paddingBottom: `${safeAreaInsets.bottom}px`,
+        }}
+      >
 
         {/* Анимированный градиентный фон */}
         <div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-rose-600 to-orange-400 animate-gradient-shift" />
@@ -55,13 +54,13 @@ const Home = () => {
         </div>
 
         {/* Контент */}
-        <div className="relative z-10 h-full flex flex-col">
+        <div className="relative z-10 h-full flex flex-col justify-between">
 
           {/* Header с балансом - учитываем Safe Area */}
           <div
             className="px-4 flex justify-end"
             style={{
-              paddingTop: `${Math.max(safeAreaInsets.top + 16, 60)}px`
+              paddingTop: `${safeAreaInsets.top}px`
             }}
           >
             <button
@@ -82,7 +81,7 @@ const Home = () => {
           </div>
 
           {/* Центральный контент - поднят на 100px */}
-          <div className="flex-1 flex flex-col items-center justify-start px-6 pt-[100px]">
+          <div className="flex-1 flex flex-col items-center justify-center px-6 pt-[100px]">
 
             {/* 3D Иконка */}
             <div className="mb-8 scale-0 animate-scale-in">
@@ -153,7 +152,7 @@ const Home = () => {
           </div>
 
           {/* Отступ снизу под Safe Area */}
-          <div style={{ height: `${safeAreaInsets.bottom + 20}px` }} />
+          <div style={{ height: `${safeAreaInsets.bottom}px` }} />
         </div>
 
         {/* Dropdown меню наград */}

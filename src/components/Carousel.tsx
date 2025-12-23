@@ -24,7 +24,7 @@ const Carousel = ({ isSpinning, winner }: Props) => {
       const centerOffset = Math.floor(repeatedServices.length / 2);
 
       // Высота одного элемента (карточка + gap)
-      const itemHeight = 220; // 200px карточка + 20px gap
+      const itemHeight = 190; // 180px карточка + 10px gap
 
       // Финальная позиция
       const finalPosition = -(centerOffset + winnerIndex) * itemHeight;
@@ -44,21 +44,9 @@ const Carousel = ({ isSpinning, winner }: Props) => {
     }
   }, [isSpinning, winner, controls, repeatedServices]);
 
-  // Предварительно вычисляем стили для оптимизации
-  const getServiceStyle = (index: number) => {
-    const distanceFromCenter = Math.abs(index - repeatedServices.length / 2);
-    const scale = Math.max(0.7, 1 - distanceFromCenter * 0.05);
-
-    return {
-      width: '280px',
-      height: '200px',
-      transform: `scale(${scale})`,
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.5)'
-    };
-  };
 
   return (
-    <div className="relative w-full h-[660px] overflow-hidden">
+    <div className="relative w-full h-[600px] overflow-hidden">
       {/* Индикатор центра (рамка выделения) */}
       <div className="absolute left-0 right-0 top-1/2 transform -translate-y-1/2 z-20 pointer-events-none px-4">
         <div
@@ -77,14 +65,19 @@ const Carousel = ({ isSpinning, winner }: Props) => {
       {/* Барабан */}
       <motion.div
         animate={controls}
-        className="flex flex-col items-center gap-5 py-[230px]"
+        className="flex flex-col items-center gap-5 py-[20vh]"
       >
         {repeatedServices.map((service, index) => (
           <div
             key={`${service.id}-${index}`}
             className="flex items-center justify-center bg-white/95 backdrop-blur-md
               rounded-3xl shadow-2xl border-2 border-white/50"
-            style={getServiceStyle(index)}
+            style={{
+              width: '280px',
+              height: '180px', /* Уменьшена высота карточки */
+              transform: `scale(${Math.max(0.7, 1 - Math.abs(index - repeatedServices.length / 2) * 0.05)})`,
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.5)'
+            }}
           >
             <img
               src={service.logo}

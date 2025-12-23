@@ -58,16 +58,15 @@ const Wheel = () => {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center"
-      style={{
-        paddingTop: `${safeAreaInsets.top}px`,
-        paddingBottom: `${safeAreaInsets.bottom}px`,
-        height: 'var(--tg-viewport-height, 100vh)'
-      }}
-    >
+    <div className="flex flex-col h-[100dvh] overflow-hidden">
       {/* Контейнер на ПОЛНУЮ ширину */}
-      <div className="w-full h-full relative">
+      <div
+        className="w-full h-full relative"
+        style={{
+          paddingTop: `${safeAreaInsets.top}px`,
+          paddingBottom: `${safeAreaInsets.bottom}px`,
+        }}
+      >
         {/* Анимированный фон */}
         <div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-rose-600 to-orange-400 animate-gradient-shift" />
 
@@ -86,7 +85,7 @@ const Wheel = () => {
           <div
             className="px-4 flex items-center justify-between"
             style={{
-              paddingTop: `${Math.max(safeAreaInsets.top + 16, 60)}px`
+              paddingTop: `${safeAreaInsets.top}px`
             }}
           >
             {/* Кнопка назад */}
@@ -117,15 +116,15 @@ const Wheel = () => {
           </div>
 
           {/* Барабан - поднят на 100px */}
-          <div className="flex-1 flex flex-col items-center justify-end px-4 pb-[100px]">
+          <div className="flex-1 flex flex-col items-center justify-center px-4 pt-[50px]">
             <Carousel isSpinning={isSpinning} winner={winner} />
           </div>
 
-          {/* Кнопка "Крутить" - с отступом от Safe Area, поднята на 100px */}
+          {/* Кнопка "Крутить" */}
           <div
             className="px-4"
             style={{
-              paddingBottom: `${Math.max(safeAreaInsets.bottom + 20, 40)}px`
+              paddingBottom: `${safeAreaInsets.bottom}px`
             }}
           >
             <button

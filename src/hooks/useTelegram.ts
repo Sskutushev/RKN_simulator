@@ -73,6 +73,9 @@ export const useTelegram = () => {
       // Инициализация
       tg.ready();
       tg.expand();
+      if (tg.requestFullscreen) {
+        tg.requestFullscreen(); // Для API 8.0
+      }
 
       // Получаем Safe Area Insets
       setSafeAreaInsets({
@@ -93,7 +96,7 @@ export const useTelegram = () => {
       );
       document.documentElement.style.setProperty(
         '--tg-viewport-height',
-        `${tg.viewportStableHeight}px`
+        `${tg.viewportStableHeight || window.innerHeight}px`
       );
     }
   }, [tg]);
