@@ -53,7 +53,9 @@ const Carousel = ({ isSpinning, winner }: Props) => {
           className="h-[200px] border-4 border-pink-500 rounded-3xl
             bg-gradient-to-r from-pink-500/10 to-rose-500/10 backdrop-blur-sm"
           style={{
-            boxShadow: '0 0 30px rgba(255, 62, 108, 0.5), inset 0 0 30px rgba(255, 255, 255, 0.1)'
+            boxShadow: '0 0 30px rgba(255, 62, 108, 0.5), inset 0 0 30px rgba(255, 255, 255, 0.1)',
+            top: '50%',
+            transform: 'translateY(-15%)'
           }}
         />
       </div>
