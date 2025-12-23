@@ -76,7 +76,7 @@ const Home = () => {
                 boxShadow: '0 0 20px rgba(255, 215, 0, 0.6)'
               }}
             >
-              <span className="text-3xl animate-spin-slow">🪙</span>
+              <span className="text-3xl animate-spin-slow">🌟</span>
               <span className="text-white font-black text-xl">{userData.coins}</span>
             </button>
           </div>

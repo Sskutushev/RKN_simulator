@@ -38,7 +38,7 @@ const Wheel = () => {
   const handleSpin = async () => {
     if (userData.coins < 2) {
       tg?.HapticFeedback.notificationOccurred('error');
-      alert('Недостаточно монет! 😢');
+      alert('Недостаточно звёзд! 😢');
       return;
     }
     if (isSpinning) return;
@@ -111,7 +111,7 @@ const Wheel = () => {
                 boxShadow: '0 0 20px rgba(255, 215, 0, 0.6)'
               }}
             >
-              <span className="text-3xl animate-spin-slow">🪙</span>
+              <span className="text-3xl animate-spin-slow">🌟</span>
               <span className="text-white font-black text-xl">{userData.coins}</span>
             </button>
           </div>
@@ -150,7 +150,7 @@ const Wheel = () => {
                   <>
                     Крутить
                     <span className="flex items-center gap-1">
-                      🪙 2
+                      🌟 2
                     </span>
                   </>
                 )}

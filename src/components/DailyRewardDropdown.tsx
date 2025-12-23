@@ -84,10 +84,10 @@ const DailyRewardDropdown = ({ onClose }: Props) => {
         <div className="bg-gradient-to-r from-pink-100 to-rose-100 rounded-xl p-4 mb-3">
           <div className="flex items-center justify-center gap-2 mb-2">
             <span className="text-3xl">🎁</span>
-            <span className="font-bold text-xl">+10 🪙</span>
+            <span className="font-bold text-xl">+10 🌟</span>
           </div>
           <p className="text-center text-sm text-gray-600">
-            Получите 10 монет для развлечения!
+            Получите 10 звёзд для развлечения!
           </p>
         </div>
         
@@ -97,7 +97,7 @@ const DailyRewardDropdown = ({ onClose }: Props) => {
             className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600
               text-white font-bold rounded-xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
           >
-            Забрать награду
+            Забрать звёзды
           </button>
         ) : (
           <div className="text-center py-3 text-gray-500 font-medium">
