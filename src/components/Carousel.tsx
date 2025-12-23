@@ -18,7 +18,8 @@ const Carousel = ({ isSpinning, winner }: Props) => {
   ], []);
 
   useEffect(() => {
-    if (isSpinning && winner) {
+    if (isSpinning) {
+      // Победитель уже определен, начинаем анимацию: быстрое вращение -> замедление -> остановка
       const winnerIndex = SERVICES.findIndex(s => s.id === winner.id);
       const centerOffset = Math.floor(repeatedServices.length / 2);
 
@@ -28,12 +29,13 @@ const Carousel = ({ isSpinning, winner }: Props) => {
       // Финальная позиция
       const finalPosition = -(centerOffset + winnerIndex) * itemHeight;
 
+      // Сначала быстрое вращение, затем замедление и остановка на нужной карточке
       controls.start({
-        y: [0, -4000, finalPosition],
+        y: [0, -8000, finalPosition - 100, finalPosition], // Сначала старт, затем быстрое вращение, проскок, затем точная остановка
         transition: {
-          duration: 5,
-          ease: [0.25, 0.1, 0.25, 1],
-          times: [0, 0.7, 1]
+          duration: 5, // Общая продолжительность анимации
+          ease: [0.25, 0.1, 0.3, 1], // Эластичная функция для эффекта замедления
+          times: [0, 0.5, 0.85, 1] // Временные метки для анимации: быстрое вращение -> замедление -> проскок -> точная остановка
         }
       });
     } else {

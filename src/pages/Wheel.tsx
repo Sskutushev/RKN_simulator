@@ -15,6 +15,17 @@ const Wheel = () => {
   const [winner, setWinner] = useState<any>(null);
   const [showPopup, setShowPopup] = useState(false);
 
+  // Показываем popup когда winner определен и прошло время анимации
+  useEffect(() => {
+    if (isSpinning && winner) {
+      const timer = setTimeout(() => {
+        setShowPopup(true);
+      }, 5000); // Соответствует duration анимации в Carousel.tsx
+
+      return () => clearTimeout(timer);
+    }
+  }, [isSpinning, winner]);
+
   const handleSpin = async () => {
     if (userData.coins < 2) {
       alert('Недостаточно монет! 😢');
@@ -24,19 +35,11 @@ const Wheel = () => {
 
     setIsSpinning(true);
     spendCoins(2);
-    setWinner(null); // Reset winner to allow re-spinning the same result
 
-    // We need a small delay for the reset to register, then set the new winner
-    setTimeout(() => {
-        const randomIndex = Math.floor(Math.random() * SERVICES.length);
-        const selectedService = SERVICES[randomIndex];
-        setWinner(selectedService); // This starts the animation in Carousel.tsx
-
-        // After animation is done (5s), show popup
-        setTimeout(() => {
-            setShowPopup(true);
-        }, 5000); // Corresponds to animation duration in Carousel.tsx
-    }, 10);
+    // Сразу определяем случайного победителя
+    const randomIndex = Math.floor(Math.random() * SERVICES.length);
+    const selectedService = SERVICES[randomIndex];
+    setWinner(selectedService); // Устанавливаем победителя сразу
   };
 
   return (
@@ -138,8 +141,11 @@ const Wheel = () => {
             service={winner}
             onClose={() => {
               setShowPopup(false);
-              setWinner(null);
-              setIsSpinning(false);
+              // Сбрасываем winner и spinning только после закрытия popup
+              setTimeout(() => {
+                setWinner(null);
+                setIsSpinning(false);
+              }, 100); // Небольшая задержка для плавного закрытия
             }}
           />
         )}

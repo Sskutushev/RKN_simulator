@@ -1,0 +1,648 @@
+📊 Анализ проблем и план рефакторинга
+🔍 Выявленные проблемы:
+
+1. Проблемы с отображением при открытии из кнопки чата
+
+Mini App открывается не на полную высоту
+Не видна кнопка "Крутить"
+Черные полосы по бокам (скрин 5)
+
+2. Проблемы с Safe Area
+
+Элементы залазят под системные кнопки Telegram (Закрыть, меню)
+Кнопка "Крутить" слишком прижата к низу
+Header с монетами перекрывается элементами Telegram
+
+3. Проблемы с шириной контейнера
+
+Контейнер обрезается по ширине
+Черные полосы по бокам вместо полной ширины
+
+🛠️ План рефакторинга с интеграцией Telegram SDK
+📝 Что нужно сделать:
+
+Добавить Telegram Web App SDK
+Инициализировать Mini App правильно
+Использовать Safe Area Insets
+Адаптировать под Telegram BackButton
+Использовать CloudStorage вместо localStorage
+Настроить правильную высоту и expand()
+Убрать фиксированную ширину контейнера
+
+🎯 Детальный план рефакторинга
+1️⃣ Обновить index.html
+html<!doctype html>
+
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+  <meta name="theme-color" content="#FF6B9D"/>
+  <title>Роскомнадзор Simulator</title>
+  
+  <!-- КРИТИЧНО: SDK должен загружаться ПЕРВЫМ -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>
+2️⃣ Создать хук useTelegram.ts
+typescript// src/hooks/useTelegram.ts
+import { useEffect, useState } from 'react';
+
+interface TelegramWebApp {
+ready: () => void;
+expand: () => void;
+close: () => void;
+BackButton: {
+show: () => void;
+hide: () => void;
+onClick: (callback: () => void) => void;
+offClick: (callback: () => void) => void;
+};
+HapticFeedback: {
+impactOccurred: (style: 'light' | 'medium' | 'heavy') => void;
+notificationOccurred: (type: 'error' | 'success' | 'warning') => void;
+};
+themeParams: {
+bg_color?: string;
+text_color?: string;
+button_color?: string;
+};
+initDataUnsafe: {
+user?: {
+id: number;
+first_name: string;
+username?: string;
+};
+};
+viewportHeight: number;
+viewportStableHeight: number;
+safeAreaInset: {
+top: number;
+bottom: number;
+left: number;
+right: number;
+};
+contentSafeAreaInset: {
+top: number;
+bottom: number;
+left: number;
+right: number;
+};
+}
+
+declare global {
+interface Window {
+Telegram?: {
+WebApp: TelegramWebApp;
+};
+}
+}
+
+export const useTelegram = () => {
+const [tg] = useState(() => window.Telegram?.WebApp);
+const [safeAreaInsets, setSafeAreaInsets] = useState({
+top: 0,
+bottom: 0,
+left: 0,
+right: 0
+});
+
+useEffect(() => {
+if (tg) {
+// Инициализация
+tg.ready();
+tg.expand();
+
+      // Получаем Safe Area Insets
+      setSafeAreaInsets({
+        top: tg.safeAreaInset?.top || 0,
+        bottom: tg.safeAreaInset?.bottom || 0,
+        left: tg.safeAreaInset?.left || 0,
+        right: tg.safeAreaInset?.right || 0
+      });
+
+      // Устанавливаем цвета
+      document.documentElement.style.setProperty(
+        '--tg-safe-area-top',
+        `${tg.safeAreaInset?.top || 0}px`
+      );
+      document.documentElement.style.setProperty(
+        '--tg-safe-area-bottom',
+        `${tg.safeAreaInset?.bottom || 0}px`
+      );
+      document.documentElement.style.setProperty(
+        '--tg-viewport-height',
+        `${tg.viewportStableHeight}px`
+      );
+    }
+
+}, [tg]);
+
+return {
+tg,
+user: tg?.initDataUnsafe?.user,
+safeAreaInsets
+};
+};
+3️⃣ Обновить App.tsx
+typescriptimport React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { UserDataProvider } from './context/UserDataContext';
+import { useTelegram } from './hooks/useTelegram';
+import Home from './pages/Home';
+import Wheel from './pages/Wheel';
+import './globals.css';
+
+function AppContent() {
+const { tg } = useTelegram();
+
+useEffect(() => {
+if (tg) {
+// Инициализация при запуске
+tg.ready();
+tg.expand();
+}
+}, [tg]);
+
+return (
+<Routes>
+<Route path="/" element={<Home />} />
+<Route path="/wheel" element={<Wheel />} />
+</Routes>
+);
+}
+
+function App() {
+return (
+<UserDataProvider>
+<Router>
+<AppContent />
+</Router>
+</UserDataProvider>
+);
+}
+
+export default App;
+4️⃣ Обновить globals.css
+css@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/_ Переменные для Safe Area _/
+:root {
+--tg-safe-area-top: 0px;
+--tg-safe-area-bottom: 0px;
+--tg-viewport-height: 100vh;
+}
+
+/_ Убираем overflow и фиксируем высоту _/
+html, body {
+margin: 0;
+padding: 0;
+overflow: hidden;
+height: 100vh;
+width: 100vw;
+position: fixed;
+}
+
+#root {
+height: 100vh;
+width: 100vw;
+overflow: hidden;
+}
+
+/_ Анимации _/
+@keyframes gradientShift {
+0% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-shift {
+background-size: 200% 200%;
+animation: gradientShift 10s ease infinite;
+}
+
+/_ Сглаживание _/
+
+- {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  }
+  5️⃣ Обновить Home.tsx
+  typescriptimport { useState, useEffect } from 'react';
+  import { useNavigate } from 'react-router-dom';
+  import { useUserData } from '../context/UserDataContext';
+  import { useTelegram } from '../hooks/useTelegram';
+  import DailyRewardDropdown from '../components/DailyRewardDropdown';
+  import logo from '../assets/logo.png';
+
+const Home = () => {
+const navigate = useNavigate();
+const [showRewardMenu, setShowRewardMenu] = useState(false);
+const { userData } = useUserData();
+const { tg, safeAreaInsets } = useTelegram();
+
+useEffect(() => {
+if (tg) {
+// Скрываем BackButton на главной
+tg.BackButton.hide();
+}
+}, [tg]);
+
+return (
+
+<div
+className="min-h-screen flex items-center justify-center"
+style={{
+        paddingTop: `${safeAreaInsets.top}px`,
+        paddingBottom: `${safeAreaInsets.bottom}px`,
+        height: 'var(--tg-viewport-height, 100vh)'
+      }} >
+{/_ Контейнер на ПОЛНУЮ ширину _/}
+<div className="w-full h-full relative overflow-hidden">
+
+        {/* Анимированный градиентный фон */}
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-rose-600 to-orange-400 animate-gradient-shift" />
+
+        {/* 3D декор */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-8 w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full opacity-30 blur-sm animate-float" />
+          <div className="absolute bottom-40 right-8 w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full opacity-20 blur-md animate-float-reverse" />
+
+          {[...Array(5)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute text-4xl animate-pulse"
+              style={{
+                top: `${20 + i * 15}%`,
+                left: `${10 + i * 20}%`,
+                animationDelay: `${i * 0.4}s`,
+                animationDuration: `${2 + i}s`
+              }}
+            >
+              ✨
+            </div>
+          ))}
+        </div>
+
+        {/* Контент */}
+        <div className="relative z-10 h-full flex flex-col">
+
+          {/* Header с балансом - учитываем Safe Area */}
+          <div
+            className="px-4 flex justify-end"
+            style={{
+              paddingTop: `${Math.max(safeAreaInsets.top + 16, 60)}px`
+            }}
+          >
+            <button
+              onClick={() => {
+                tg?.HapticFeedback.impactOccurred('light');
+                setShowRewardMenu(true);
+              }}
+              className="flex items-center gap-2 px-5 py-3
+                bg-gradient-to-r from-amber-400 to-orange-500
+                rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-transform duration-200"
+              style={{
+                boxShadow: '0 0 20px rgba(255, 215, 0, 0.6)'
+              }}
+            >
+              <span className="text-3xl animate-spin-slow">🪙</span>
+              <span className="text-white font-black text-xl">{userData.coins}</span>
+            </button>
+          </div>
+
+          {/* Центральный контент */}
+          <div className="flex-1 flex flex-col items-center justify-center px-6">
+
+            {/* 3D Иконка */}
+            <div className="mb-8 scale-0 animate-scale-in">
+              <div className="relative">
+                <div className="absolute inset-0 bg-red-500 rounded-3xl blur-3xl opacity-40 animate-pulse" />
+                <div className="relative w-32 h-32 bg-gradient-to-br from-red-500 via-rose-600 to-red-700
+                  rounded-3xl flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-300"
+                  style={{ transformStyle: 'preserve-3d', transform: 'perspective(1000px)' }}
+                >
+                  <img src={logo} alt="Logo" className="w-full h-full object-contain" />
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/20 to-transparent" />
+                </div>
+              </div>
+            </div>
+
+            {/* Заголовок */}
+            <div className="mb-6 opacity-0 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+              <h1 className="text-4xl font-black text-center text-white mb-2 drop-shadow-2xl">
+                РОСКОМНАДЗОР
+              </h1>
+              <div className="flex items-center justify-center gap-2">
+                <div className="h-1 w-12 bg-gradient-to-r from-transparent via-white to-transparent animate-scale-x opacity-0"
+                  style={{ animationDelay: '0.5s' }}
+                />
+                <h2 className="text-2xl font-bold text-white/90">SIMULATOR</h2>
+                <div className="h-1 w-12 bg-gradient-to-r from-transparent via-white to-transparent animate-scale-x opacity-0"
+                  style={{ animationDelay: '0.5s' }}
+                />
+              </div>
+            </div>
+
+            {/* Описание */}
+            <div className="bg-white/95 backdrop-blur-md rounded-[20px] p-5 shadow-2xl mb-8
+              border border-white/50 opacity-0 animate-fade-in max-w-sm"
+              style={{ animationDelay: '0.6s' }}
+            >
+              <p className="text-center text-gray-800 leading-relaxed text-sm font-medium">
+                Это <span className="font-black text-pink-600">юмористическое приложение</span>
+                {' '}для развлечения. Попробуйте себя в роли сотрудника Роскомнадзора.
+              </p>
+              <div className="mt-4 pt-4 border-t border-pink-200">
+                <p className="text-xs text-center text-gray-500 italic">
+                  ⚠️ Все события выдуманы. Любые совпадения случайны.
+                </p>
+              </div>
+            </div>
+
+            {/* Кнопка запуска */}
+            <button
+              onClick={() => {
+                tg?.HapticFeedback.impactOccurred('medium');
+                navigate('/wheel');
+              }}
+              className="w-full max-w-sm py-5 bg-gradient-to-r from-pink-500 to-rose-600
+                text-white font-black text-lg rounded-[90px] shadow-2xl
+                relative overflow-hidden group opacity-0 animate-fade-in
+                hover:scale-102 active:scale-98 transition-transform duration-200"
+              style={{
+                boxShadow: '0 0 30px rgba(255, 62, 108, 0.5)',
+                animationDelay: '0.8s'
+              }}
+            >
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                Начать правосудие
+                <span className="text-2xl">⚖️</span>
+              </span>
+            </button>
+          </div>
+
+          {/* Отступ снизу под Safe Area */}
+          <div style={{ height: `${safeAreaInsets.bottom + 20}px` }} />
+        </div>
+
+        {/* Dropdown меню наград */}
+        {showRewardMenu && (
+          <DailyRewardDropdown onClose={() => setShowRewardMenu(false)} />
+        )}
+      </div>
+    </div>
+
+);
+};
+
+export default Home;
+6️⃣ Обновить Wheel.tsx
+typescriptimport { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUserData } from '../context/UserDataContext';
+import { useTelegram } from '../hooks/useTelegram';
+import { SERVICES } from '../data/services';
+import Carousel from '../components/Carousel';
+import ResultPopup from '../components/ResultPopup';
+import DailyRewardDropdown from '../components/DailyRewardDropdown';
+
+const Wheel = () => {
+const navigate = useNavigate();
+const { userData, spendCoins } = useUserData();
+const { tg, safeAreaInsets } = useTelegram();
+const [showRewardMenu, setShowRewardMenu] = useState(false);
+const [isSpinning, setIsSpinning] = useState(false);
+const [winner, setWinner] = useState<any>(null);
+const [showPopup, setShowPopup] = useState(false);
+
+useEffect(() => {
+if (tg) {
+// Показываем BackButton
+tg.BackButton.show();
+
+      const handleBack = () => {
+        tg.HapticFeedback.impactOccurred('light');
+        navigate('/');
+      };
+
+      tg.BackButton.onClick(handleBack);
+
+      return () => {
+        tg.BackButton.offClick(handleBack);
+        tg.BackButton.hide();
+      };
+    }
+
+}, [tg, navigate]);
+
+const handleSpin = async () => {
+if (userData.coins < 2) {
+tg?.HapticFeedback.notificationOccurred('error');
+alert('Недостаточно монет! 😢');
+return;
+}
+if (isSpinning) return;
+
+    tg?.HapticFeedback.impactOccurred('heavy');
+    setIsSpinning(true);
+    spendCoins(2);
+    setWinner(null);
+
+    setTimeout(() => {
+      const randomIndex = Math.floor(Math.random() * SERVICES.length);
+      const selectedService = SERVICES[randomIndex];
+      setWinner(selectedService);
+
+      setTimeout(() => {
+        tg?.HapticFeedback.notificationOccurred('success');
+        setShowPopup(true);
+      }, 5000);
+    }, 10);
+
+};
+
+return (
+
+<div
+className="min-h-screen flex items-center justify-center"
+style={{
+        paddingTop: `${safeAreaInsets.top}px`,
+        paddingBottom: `${safeAreaInsets.bottom}px`,
+        height: 'var(--tg-viewport-height, 100vh)'
+      }} >
+{/_ Контейнер на ПОЛНУЮ ширину _/}
+<div className="w-full h-full relative">
+
+        {/* Анимированный фон */}
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-rose-600 to-orange-400 animate-gradient-shift" />
+
+        {/* 3D декор */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div
+            className="absolute top-20 left-0 w-64 h-64 bg-white rounded-full blur-3xl animate-pulse opacity-10"
+            style={{ animationDuration: '4s' }}
+          />
+        </div>
+
+        {/* Контент */}
+        <div className="relative z-10 h-full flex flex-col">
+
+          {/* Header - учитываем Safe Area и BackButton */}
+          <div
+            className="px-4 flex justify-end"
+            style={{
+              paddingTop: `${Math.max(safeAreaInsets.top + 16, 60)}px`
+            }}
+          >
+            {/* Баланс */}
+            <button
+              onClick={() => {
+                tg?.HapticFeedback.impactOccurred('light');
+                setShowRewardMenu(true);
+              }}
+              className="flex items-center gap-2 px-5 py-3
+                bg-gradient-to-r from-amber-400 to-orange-500
+                rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-transform duration-200"
+              style={{
+                boxShadow: '0 0 20px rgba(255, 215, 0, 0.6)'
+              }}
+            >
+              <span className="text-3xl animate-spin-slow">🪙</span>
+              <span className="text-white font-black text-xl">{userData.coins}</span>
+            </button>
+          </div>
+
+          {/* Барабан */}
+          <div className="flex-1 flex flex-col items-center justify-center px-4">
+            <Carousel isSpinning={isSpinning} winner={winner} />
+          </div>
+
+          {/* Кнопка "Крутить" - с отступом от Safe Area */}
+          <div
+            className="px-4"
+            style={{
+              paddingBottom: `${Math.max(safeAreaInsets.bottom + 20, 40)}px`
+            }}
+          >
+            <button
+              onClick={handleSpin}
+              disabled={isSpinning || userData.coins < 2}
+              className={`
+                w-full py-5 rounded-[90px] font-black text-lg shadow-2xl
+                transition-all duration-300 relative overflow-hidden
+                ${isSpinning || userData.coins < 2
+                  ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-pink-500 to-rose-600 text-white hover:scale-102 active:scale-98'
+                }
+              `}
+              style={{
+                boxShadow: isSpinning || userData.coins < 2
+                  ? 'none'
+                  : '0 0 30px rgba(255, 62, 108, 0.6)'
+              }}
+            >
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {isSpinning ? '🎰 Крутится...' : (
+                  <>
+                    Крутить
+                    <span className="flex items-center gap-1">
+                      🪙 2
+                    </span>
+                  </>
+                )}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Dropdown и Popup */}
+        {showRewardMenu && <DailyRewardDropdown onClose={() => setShowRewardMenu(false)} />}
+        {showPopup && winner && (
+          <ResultPopup
+            service={winner}
+            onClose={() => {
+              setShowPopup(false);
+              setWinner(null);
+              setIsSpinning(false);
+            }}
+          />
+        )}
+      </div>
+    </div>
+
+);
+};
+
+export default Wheel;
+7️⃣ Обновить tailwind.config.js
+javascript/** @type {import('tailwindcss').Config} \*/
+module.exports = {
+content: [
+"./src/**/\*.{js,jsx,ts,tsx}",
+],
+theme: {
+extend: {
+animation: {
+'gradient-shift': 'gradientShift 10s ease infinite',
+'float': 'float 8s ease-in-out infinite',
+'float-reverse': 'floatReverse 10s ease-in-out infinite',
+'fade-in': 'fadeIn 0.6s ease forwards',
+'scale-in': 'scaleIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+'spin-slow': 'spinSlow 4s linear infinite',
+'scale-x': 'scaleX 0.8s ease forwards',
+},
+keyframes: {
+gradientShift: {
+'0%': { backgroundPosition: '0% 50%' },
+'50%': { backgroundPosition: '100% 50%' },
+'100%': { backgroundPosition: '0% 50%' },
+},
+float: {
+'0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+'50%': { transform: 'translateY(-20px) rotate(180deg)' },
+},
+floatReverse: {
+'0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+'50%': { transform: 'translateY(30px) rotate(-180deg)' },
+},
+fadeIn: {
+from: { opacity: '0', transform: 'translateY(30px)' },
+to: { opacity: '1', transform: 'translateY(0)' },
+},
+scaleIn: {
+from: { transform: 'scale(0) rotateY(-180deg)' },
+to: { transform: 'scale(1) rotateY(0deg)' },
+},
+spinSlow: {
+from: { transform: 'rotate(0deg)' },
+to: { transform: 'rotate(360deg)' },
+},
+scaleX: {
+from: { transform: 'scaleX(0)' },
+to: { transform: 'scaleX(1)' },
+},
+}
+},
+},
+plugins: [],
+}
+
+✅ Итоговые изменения:
+
+✅ Telegram SDK интегрирован
+✅ Safe Area Insets учитываются
+✅ BackButton работает нативно
+✅ Haptic Feedback везде
+✅ Контейнер на полную ширину (убрали max-width)
+✅ Правильные отступы от системных элементов
+✅ Expand() вызывается при старте
+✅ Кнопка "Крутить" с правильным отступом снизу
+
+Теперь Mini App будет корректно открываться из любой кнопки Telegram! 🎉
