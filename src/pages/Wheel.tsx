@@ -49,16 +49,9 @@ const Wheel = () => {
         {/* 3D декор */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {/* Анимированные круги */}
-          <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.1, 0.3, 0.1]
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity
-            }}
-            className="absolute top-20 left-0 w-64 h-64 bg-white rounded-full blur-3xl"
+          <div
+            className="absolute top-20 left-0 w-64 h-64 bg-white rounded-full blur-3xl animate-pulse opacity-10"
+            style={{ animationDuration: '4s' }}
           />
         </div>
 
@@ -68,39 +61,33 @@ const Wheel = () => {
           {/* Header */}
           <div className="pt-16 px-4 flex items-center justify-between">
             {/* Кнопка назад */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+            <button
               onClick={() => navigate('/')}
               className="w-12 h-12 bg-white/90 backdrop-blur-md rounded-full
-                shadow-xl flex items-center justify-center"
+                shadow-xl flex items-center justify-center hover:scale-110 active:scale-90 transition-transform duration-200"
             >
               <span className="text-2xl leading-none">←</span>
-            </motion.button>
+            </button>
 
             {/* Баланс */}
-            <motion.button
+            <button
               onClick={() => setShowRewardMenu(true)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
               className="flex items-center gap-2 px-5 py-3
                 bg-gradient-to-r from-amber-400 to-orange-500
-                rounded-full shadow-2xl"
+                rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-transform duration-200"
               style={{
                 boxShadow: '0 0 20px rgba(255, 215, 0, 0.6)'
               }}
             >
-              <motion.span
-                animate={{ rotate: [0, 15, -15, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="text-3xl"
+              <span
+                className="text-3xl animate-spin-slow"
               >
                 🪙
-              </motion.span>
+              </span>
               <span className="text-white font-black text-xl">
                 {userData.coins}
               </span>
-            </motion.button>
+            </button>
           </div>
 
           {/* Барабан */}
@@ -113,9 +100,7 @@ const Wheel = () => {
 
           {/* Кнопка "Крутить" */}
           <div className="pb-24 px-4">
-            <motion.button
-              whileHover={{ scale: isSpinning ? 1 : 1.02 }}
-              whileTap={{ scale: isSpinning ? 1 : 0.98 }}
+            <button
               onClick={handleSpin}
               disabled={isSpinning || userData.coins < 2}
               className={`
@@ -123,7 +108,7 @@ const Wheel = () => {
                 transition-all duration-300 relative overflow-hidden
                 ${isSpinning || userData.coins < 2
                   ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-pink-500 to-rose-600 text-white'
+                  : 'bg-gradient-to-r from-pink-500 to-rose-600 text-white hover:scale-102 active:scale-98'
                 }
               `}
               style={{
@@ -132,14 +117,6 @@ const Wheel = () => {
                   : '0 0 30px rgba(255, 62, 108, 0.6)'
               }}
             >
-              {!isSpinning && userData.coins >= 2 && (
-                <motion.div
-                  animate={{ x: ['-100%', '100%'] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                />
-              )}
-
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {isSpinning ? '🎰 Крутится...' : (
                   <>
@@ -150,7 +127,7 @@ const Wheel = () => {
                   </>
                 )}
               </span>
-            </motion.button>
+            </button>
           </div>
         </div>
 

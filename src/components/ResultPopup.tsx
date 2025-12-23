@@ -49,9 +49,9 @@ const ResultPopup = ({ service, onClose }: Props) => {
       >
         {/* Popup */}
         <motion.div
-          initial={{ scale: 0, opacity: 0, rotateY: -180 }}
-          animate={{ scale: 1, opacity: 1, rotateY: 0 }}
-          exit={{ scale: 0, opacity: 0, rotateY: 180 }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
           transition={{ type: 'spring', damping: 20 }}
           className="relative z-10 w-full max-w-[340px]
             bg-gradient-to-b from-white via-pink-50 to-rose-50
@@ -62,15 +62,10 @@ const ResultPopup = ({ service, onClose }: Props) => {
           onClick={(e) => e.stopPropagation()} // Предотвращаем закрытие при клике внутри попапа
         >
           {/* Логотип с 3D эффектом */}
-          <motion.div
+          <div
             className="w-full h-48 bg-white/80 backdrop-blur-sm rounded-3xl
               shadow-inner flex items-center justify-center mb-5 relative overflow-hidden"
-            whileHover={{
-              rotateY: 15,
-              rotateX: 15
-            }}
             style={{
-              transformStyle: 'preserve-3d',
               boxShadow: 'inset 0 0 30px rgba(255, 62, 108, 0.1)'
             }}
           >
@@ -81,8 +76,9 @@ const ResultPopup = ({ service, onClose }: Props) => {
               src={service.logo}
               alt={service.name}
               className="w-40 h-40 object-contain relative z-10"
+              loading="lazy"
             />
-          </motion.div>
+          </div>
 
           {/* Название */}
           <h2 className="text-2xl font-black text-center bg-gradient-to-r from-pink-600 to-rose-600
@@ -109,14 +105,14 @@ const ResultPopup = ({ service, onClose }: Props) => {
             />
           </div>
         </motion.div>
-      </motion.div> 
+      </motion.div>
     </>
   );
 };
 
 const ActionButton = ({ label, gradient, onClick }: any) => (
   <motion.button
-    whileHover={{ scale: 1.03, y: -2 }}
+    whileHover={{ scale: 1.03 }}
     whileTap={{ scale: 0.97 }}
     onClick={onClick}
     className={`w-full py-4 rounded-[90px] font-black text-white text-lg
@@ -127,11 +123,6 @@ const ActionButton = ({ label, gradient, onClick }: any) => (
       boxShadow: '0 5px 20px rgba(0, 0, 0, 0.3)'
     }}
   >
-    <motion.div
-      animate={{ x: ['-100%', '100%'] }}
-      transition={{ duration: 2, repeat: Infinity }}
-      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-    />
     <span className="relative z-10">{label}</span>
   </motion.button>
 );

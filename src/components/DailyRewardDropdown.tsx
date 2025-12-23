@@ -92,15 +92,13 @@ const DailyRewardDropdown = ({ onClose }: Props) => {
         </div>
         
         {canClaim ? (
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
+          <button
             onClick={claimReward}
-            className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 
-              text-white font-bold rounded-xl shadow-lg"
+            className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600
+              text-white font-bold rounded-xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
           >
             Забрать награду
-          </motion.button>
+          </button>
         ) : (
           <div className="text-center py-3 text-gray-500 font-medium">
             Следующая награда: {timeLeft}
