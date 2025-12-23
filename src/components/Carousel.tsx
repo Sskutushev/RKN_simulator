@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
 import { SERVICES } from '../data/services';
 
@@ -29,22 +29,53 @@ const Carousel = ({ isSpinning, winner, onComplete }: Props) => {
   // Стартовая позиция - в середине списка
   const startPosition = -5000;
 
+  // Автоматическая прокрутка до начала игры
+  const [autoScrollY, setAutoScrollY] = useState(startPosition);
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
+    if (!isSpinning) {
+      // Начинаем автоматическую прокрутку
+      intervalId = setInterval(() => {
+        // Медленно сдвигаем барабан на высоту одного элемента
+        setAutoScrollY(prevY => prevY - STEP);
+      }, 1500); // Каждые 1.5 секунды
+    } else {
+      // Когда начинается спин, сбрасываем авто-прокрутку
+      setAutoScrollY(startPosition);
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [isSpinning, STEP]);
+
+  // Синхронизируем autoScrollY с controls
+  useEffect(() => {
+    if (!isSpinning) {
+      controls.start({ y: autoScrollY }, { duration: 1.5, ease: 'linear' });
+    }
+  }, [autoScrollY, isSpinning, controls]);
+
   useEffect(() => {
     if (isSpinning && winner) {
       const winnerIndex = SERVICES.findIndex(s => s.id === winner.id);
-      
+
       // Рассчитываем дистанцию: 3 полных круга + позиция победителя
       const fullRoundDistance = SERVICES.length * STEP;
       const roundsDistance = 3 * fullRoundDistance;
       const winnerPositionDistance = winnerIndex * STEP;
-      
+
       // Общая дистанция - общее расстояние, которое нужно пройти
       const totalDistance = roundsDistance + winnerPositionDistance;
-      
+
       // Чтобы победитель оказался в центре, нужно компенсировать половину высоты экрана
       // (предполагаем, что высота контейнера 600px, значит центр на 300px)
       const centerOffset = 300; // Примерно центр экрана
-      
+
       const finalPosition = startPosition - totalDistance + centerOffset;
 
       // Анимация с резким стартом и плавным торможением
@@ -59,11 +90,12 @@ const Carousel = ({ isSpinning, winner, onComplete }: Props) => {
           onComplete();
         }
       });
-    } else {
-      // Начальная позиция
+    } else if (!isSpinning) {
+      // Возвращаемся к начальной позиции при остановке вращения
       controls.set({ y: startPosition });
+      setAutoScrollY(startPosition);
     }
-  }, [isSpinning, winner, controls, repeatedServices, onComplete]);
+  }, [isSpinning, winner, controls, repeatedServices, onComplete, startPosition]);
 
   return (
     <div className="relative w-full h-[600px] overflow-hidden">
