@@ -81,8 +81,8 @@ const Home = () => {
             </button>
           </div>
 
-          {/* Центральный контент */}
-          <div className="flex-1 flex flex-col items-center justify-center px-6">
+          {/* Центральный контент - поднят на 100px */}
+          <div className="flex-1 flex flex-col items-center justify-start px-6 pt-[100px]">
 
             {/* 3D Иконка */}
             <div className="mb-8 scale-0 animate-scale-in">

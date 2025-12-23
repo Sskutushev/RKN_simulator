@@ -116,12 +116,12 @@ const Wheel = () => {
             </button>
           </div>
 
-          {/* Барабан - поднят на 50px */}
-          <div className="flex-1 flex flex-col items-center justify-end px-4 pb-[50px]">
+          {/* Барабан - поднят на 100px */}
+          <div className="flex-1 flex flex-col items-center justify-end px-4 pb-[100px]">
             <Carousel isSpinning={isSpinning} winner={winner} />
           </div>
 
-          {/* Кнопка "Крутить" - с отступом от Safe Area, поднята на 50px */}
+          {/* Кнопка "Крутить" - с отступом от Safe Area, поднята на 100px */}
           <div
             className="px-4"
             style={{
