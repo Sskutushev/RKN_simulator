@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { UserDataProvider } from './context/UserDataContext';
 import { useTelegram } from './hooks/useTelegram';
 import Home from './pages/Home';
@@ -28,7 +28,7 @@ function AppContent() {
 function App() {
   return (
     <UserDataProvider>
-      <Router>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AppContent />
       </Router>
     </UserDataProvider>

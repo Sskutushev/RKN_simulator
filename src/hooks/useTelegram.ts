@@ -41,6 +41,14 @@ interface TelegramWebApp {
     left: number;
     right: number;
   };
+  CloudStorage?: {
+    getItem: (key: string, callback: (error: Error | null, value: string | null) => void) => void;
+    setItem: (key: string, value: string, callback: (error: Error | null) => void) => void;
+    removeItem: (key: string, callback: (error: Error | null) => void) => void;
+    getItems: (keys: string[], callback: (error: Error | null, values: { [key: string]: string }) => void) => void;
+    removeItems: (keys: string[], callback: (error: Error | null) => void) => void;
+    keys: (callback: (error: Error | null, keys: string[]) => void) => void;
+  };
 }
 
 declare global {

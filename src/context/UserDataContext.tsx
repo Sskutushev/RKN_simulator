@@ -28,7 +28,9 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
             window.Telegram.WebApp.CloudStorage.getItem('userData', (error, result) => {
               if (error) {
                 console.error('Error getting data from CloudStorage:', error);
-                resolve(null);
+                // Fallback to localStorage if CloudStorage fails
+                const localData = localStorage.getItem('userData');
+                resolve(localData);
               } else {
                 resolve(result);
               }
@@ -47,6 +49,11 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         }
       } catch (error) {
         console.error('Error loading user data:', error);
+        // Fallback to localStorage if parsing fails
+        const storedData = localStorage.getItem('userData');
+        if (storedData) {
+          setUserData(JSON.parse(storedData));
+        }
       }
     };
 
@@ -61,14 +68,14 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 
         if (window.Telegram?.WebApp?.CloudStorage) {
           // Save to Telegram CloudStorage
-          await new Promise<void>((resolve, reject) => {
+          await new Promise<void>((resolve) => {
             window.Telegram.WebApp.CloudStorage.setItem('userData', dataToSave, (error) => {
               if (error) {
                 console.error('Error saving to CloudStorage:', error);
-                reject(error);
-              } else {
-                resolve();
+                // Fallback to localStorage if CloudStorage fails
+                localStorage.setItem('userData', dataToSave);
               }
+              resolve();
             });
           });
         } else {
@@ -77,6 +84,12 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         }
       } catch (error) {
         console.error('Error saving user data:', error);
+        // Fallback to localStorage if anything fails
+        try {
+          localStorage.setItem('userData', JSON.stringify(userData));
+        } catch (localStorageError) {
+          console.error('Error saving to localStorage:', localStorageError);
+        }
       }
     };
 
