@@ -25,16 +25,22 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         if (window.Telegram?.WebApp?.CloudStorage) {
           // Try to get from Telegram CloudStorage
           const storedData = await new Promise<string | null>((resolve) => {
-            window.Telegram.WebApp.CloudStorage.getItem('userData', (error, result) => {
-              if (error) {
-                console.error('Error getting data from CloudStorage:', error);
-                // Fallback to localStorage if CloudStorage fails
-                const localData = localStorage.getItem('userData');
-                resolve(localData);
-              } else {
-                resolve(result);
-              }
-            });
+            if (window.Telegram?.WebApp?.CloudStorage) {
+              window.Telegram.WebApp.CloudStorage.getItem('userData', (error, result) => {
+                if (error) {
+                  console.error('Error getting data from CloudStorage:', error);
+                  // Fallback to localStorage if CloudStorage fails
+                  const localData = localStorage.getItem('userData');
+                  resolve(localData);
+                } else {
+                  resolve(result);
+                }
+              });
+            } else {
+              // Fallback to localStorage if CloudStorage is not available
+              const localData = localStorage.getItem('userData');
+              resolve(localData);
+            }
           });
 
           if (storedData) {
