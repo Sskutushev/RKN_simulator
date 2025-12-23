@@ -84,11 +84,20 @@ const Wheel = () => {
 
           {/* Header - учитываем Safe Area и BackButton */}
           <div
-            className="px-4 flex justify-end"
+            className="px-4 flex items-center justify-between"
             style={{
               paddingTop: `${Math.max(safeAreaInsets.top + 16, 60)}px`
             }}
           >
+            {/* Кнопка назад */}
+            <button
+              onClick={() => navigate('/')}
+              className="w-12 h-12 bg-white/90 backdrop-blur-md rounded-full
+                shadow-xl flex items-center justify-center hover:scale-110 active:scale-90 transition-transform duration-200"
+            >
+              <span className="text-2xl leading-none">←</span>
+            </button>
+
             {/* Баланс */}
             <button
               onClick={() => {
