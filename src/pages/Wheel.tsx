@@ -40,8 +40,8 @@ const Wheel = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-[375px] min-w-[320px] min-h-screen relative">
+    <div className="h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-[480px] min-w-[320px] h-screen relative">
 
         {/* Анимированный фон */}
         <div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-rose-600 to-orange-400 animate-gradient-shift" />
@@ -66,7 +66,7 @@ const Wheel = () => {
         <div className="relative z-10 h-full flex flex-col">
 
           {/* Header */}
-          <div className="pt-12 px-4 flex items-center justify-between">
+          <div className="pt-16 px-4 flex items-center justify-between">
             {/* Кнопка назад */}
             <motion.button
               whileHover={{ scale: 1.1 }}

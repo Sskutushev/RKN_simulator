@@ -64,8 +64,8 @@ const DailyRewardDropdown = ({ onClose }: Props) => {
         animate={{ y: 0 }}
         exit={{ y: "100%" }}
         transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-        className="absolute bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg 
-                   rounded-t-[24px] shadow-2xl p-4 mx-auto max-w-[375px]"
+        className="absolute bottom-[50px] left-0 right-0 z-50 bg-white/95 backdrop-blur-lg
+                   rounded-[24px] shadow-2xl p-4 mx-auto max-w-[375px]"
         style={{
           boxShadow: '0 -10px 30px rgba(0, 0, 0, 0.2)'
         }}
@@ -87,7 +87,7 @@ const DailyRewardDropdown = ({ onClose }: Props) => {
             <span className="font-bold text-xl">+10 🪙</span>
           </div>
           <p className="text-center text-sm text-gray-600">
-            Получите 10 монет за вход сегодня!
+            Получите 10 монет для развлечения!
           </p>
         </div>
         

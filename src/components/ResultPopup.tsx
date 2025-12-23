@@ -1,9 +1,21 @@
 import { motion } from 'framer-motion';
 import { useUserData } from '../context/UserDataContext';
-import { FUNNY_COMMENTS } from '../data/comments';
+
+interface ServiceComment {
+  ban: string;
+  slow: string;
+  limit: string;
+}
+
+interface Service {
+  id: string;
+  name: string;
+  logo: string;
+  comments: ServiceComment;
+}
 
 interface Props {
-  service: any;
+  service: Service;
   onClose: () => void;
 }
 
@@ -19,9 +31,9 @@ const ResultPopup = ({ service, onClose }: Props) => {
       limit: `🔒 ${service.name} ограничен!`
     };
 
-    const randomComment = FUNNY_COMMENTS[Math.floor(Math.random() * FUNNY_COMMENTS.length)];
+    const serviceComment = service.comments[action];
 
-    alert(`${messages[action]}\n\n${randomComment}`);
+    alert(`${messages[action]}\n\n${serviceComment}`);
     onClose();
   };
 
