@@ -23,6 +23,19 @@ const Wheel = () => {
     }
   }, [tg]);
 
+  // Показываем popup когда анимация завершена
+  useEffect(() => {
+    if (winner && isSpinning) {
+      // Показываем popup после завершения анимации (5 секунд)
+      const timer = setTimeout(() => {
+        setIsSpinning(false);
+        setShowPopup(true);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [winner, isSpinning]);
+
   const handleSpin = async () => {
     if (userData.coins < 2) {
       tg?.HapticFeedback.notificationOccurred('error');
@@ -35,14 +48,10 @@ const Wheel = () => {
     setIsSpinning(true);
     spendCoins(2);
 
+    // Сразу определяем случайного победителя
     const randomIndex = Math.floor(Math.random() * SERVICES.length);
     const selectedService = SERVICES[randomIndex];
-    setWinner(selectedService);
-
-    setTimeout(() => {
-      tg?.HapticFeedback.notificationOccurred('success');
-      setShowPopup(true);
-    }, 5000);
+    setWinner(selectedService); // Устанавливаем победителя до начала анимации
   };
 
   return (
@@ -117,7 +126,7 @@ const Wheel = () => {
                 boxShadow: isSpinning || userData.coins < 2
                   ? 'none'
                   : '0 0 30px rgba(255, 62, 108, 0.6)',
-                bottom: `${safeAreaInsets.bottom -700}px`, // Поднята на 50px
+                bottom: `${safeAreaInsets.bottom + 50}px`, // Поднята на 50px
                 left: '50%',
                 transform: 'translateX(-50%)',
                 width: 'calc(100% - 32px)',
@@ -147,7 +156,6 @@ const Wheel = () => {
             onClose={() => {
               setShowPopup(false);
               setWinner(null);
-              setIsSpinning(false);
             }}
           />
         )}
