@@ -126,7 +126,7 @@ const Wheel = () => {
                 boxShadow: isSpinning || userData.coins < 2
                   ? 'none'
                   : '0 0 30px rgba(255, 62, 108, 0.6)',
-                bottom: `${safeAreaInsets.bottom -700}px`, // Поднята на 50px
+                bottom: `${safeAreaInsets.bottom -700}px`, // Опустил на 700px
                 left: '50%',
                 transform: 'translateX(-50%)',
                 width: 'calc(100% - 32px)',

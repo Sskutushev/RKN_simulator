@@ -26,8 +26,9 @@ const Carousel = ({ isSpinning, winner }: Props) => {
       // Высота одного элемента (карточка + gap)
       const itemHeight = 190; // 180px карточка + 10px gap
 
-      // Финальная позиция
-      const finalPosition = -(centerOffset + winnerIndex) * itemHeight;
+      // Финальная позиция - смещаем так, чтобы winnerIndex оказался в centerOffset
+      const offsetToCenter = centerOffset - winnerIndex;
+      const finalPosition = -offsetToCenter * itemHeight;
 
       // Плавная анимация: медленное начало -> ускорение -> плавное замедление
       controls.start({
