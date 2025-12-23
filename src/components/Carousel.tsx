@@ -18,7 +18,7 @@ const Carousel = ({ isSpinning, winner }: Props) => {
   ], []);
 
   useEffect(() => {
-    if (isSpinning) {
+    if (isSpinning && winner) {
       // Победитель уже определен, начинаем анимацию: быстрое вращение -> замедление -> остановка
       const winnerIndex = SERVICES.findIndex(s => s.id === winner.id);
       const centerOffset = Math.floor(repeatedServices.length / 2);

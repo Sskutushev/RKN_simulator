@@ -46,18 +46,15 @@ const Wheel = () => {
     tg?.HapticFeedback.impactOccurred('heavy');
     setIsSpinning(true);
     spendCoins(2);
-    setWinner(null);
+
+    const randomIndex = Math.floor(Math.random() * SERVICES.length);
+    const selectedService = SERVICES[randomIndex];
+    setWinner(selectedService);
 
     setTimeout(() => {
-      const randomIndex = Math.floor(Math.random() * SERVICES.length);
-      const selectedService = SERVICES[randomIndex];
-      setWinner(selectedService);
-
-      setTimeout(() => {
-        tg?.HapticFeedback.notificationOccurred('success');
-        setShowPopup(true);
-      }, 5000);
-    }, 10);
+      tg?.HapticFeedback.notificationOccurred('success');
+      setShowPopup(true);
+    }, 5000);
   };
 
   return (
@@ -110,12 +107,12 @@ const Wheel = () => {
             </button>
           </div>
 
-          {/* Барабан */}
-          <div className="flex-1 flex flex-col items-center justify-center px-4">
+          {/* Барабан - поднят на 50px */}
+          <div className="flex-1 flex flex-col items-center justify-end px-4 pb-[50px]">
             <Carousel isSpinning={isSpinning} winner={winner} />
           </div>
 
-          {/* Кнопка "Крутить" - с отступом от Safe Area */}
+          {/* Кнопка "Крутить" - с отступом от Safe Area, поднята на 50px */}
           <div
             className="px-4"
             style={{
