@@ -73,9 +73,6 @@ export const useTelegram = () => {
       // Инициализация
       tg.ready();
       tg.expand();
-      if (tg.requestFullscreen) {
-        tg.requestFullscreen(); // Для API 8.0
-      }
 
       // Получаем Safe Area Insets
       setSafeAreaInsets({
