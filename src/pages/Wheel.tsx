@@ -79,7 +79,7 @@ const Wheel = () => {
         </div>
 
         {/* Контент */}
-        <div className="relative z-10 h-full flex flex-col">
+        <div className="relative z-10 h-full pb-[120px] flex flex-col">
 
           {/* Header - учитываем Safe Area и BackButton */}
           <div
@@ -120,19 +120,15 @@ const Wheel = () => {
             <Carousel isSpinning={isSpinning} winner={winner} />
           </div>
 
-          {/* Кнопка "Крутить" */}
-          <div
-            className="px-4"
-            style={{
-              paddingBottom: `${safeAreaInsets.bottom}px`
-            }}
-          >
+          {/* Кнопка "Крутить" в абсолютном позиционировании, поднята на 50px */}
+          <div className="absolute left-0 right-0 px-4">
             <button
               onClick={handleSpin}
               disabled={isSpinning || userData.coins < 2}
               className={`
                 w-full py-5 rounded-[90px] font-black text-lg shadow-2xl
                 transition-all duration-300 relative overflow-hidden
+                ${isSpinning ? 'opacity-0' : 'opacity-100'}
                 ${isSpinning || userData.coins < 2
                   ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
                   : 'bg-gradient-to-r from-pink-500 to-rose-600 text-white hover:scale-102 active:scale-98'
@@ -141,7 +137,13 @@ const Wheel = () => {
               style={{
                 boxShadow: isSpinning || userData.coins < 2
                   ? 'none'
-                  : '0 0 30px rgba(255, 62, 108, 0.6)'
+                  : '0 0 30px rgba(255, 62, 108, 0.6)',
+                bottom: `${safeAreaInsets.bottom -750}px`, // Поднята на 50px
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 'calc(100% - 32px)',
+                maxWidth: '480px',
+                zIndex: 40 // Убедимся, что кнопка поверх других элементов
               }}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
