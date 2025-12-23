@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Переменные для Safe Area */
+:root {
+  --tg-safe-area-top: 0px;
+  --tg-safe-area-bottom: 0px;
+  --tg-viewport-height: 100vh;
+}
+
+/* Убираем overflow и фиксируем высоту */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
 /* Анимация градиента */
 @keyframes gradientShift {
   0% {
@@ -113,13 +136,9 @@
   animation: scaleX 0.8s ease forwards;
 }
 
-/* Убираем scrollbar */
-body {
-  overflow: hidden;
-}
-
 /* Сглаживание шрифтов */
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
 }

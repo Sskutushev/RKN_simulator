@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 interface UserData {
   coins: number;
@@ -16,14 +16,71 @@ interface UserDataContextType {
 const UserDataContext = createContext<UserDataContextType | undefined>(undefined);
 
 export const UserDataProvider = ({ children }: { children: ReactNode }) => {
-  const [userData, setUserData] = useState<UserData>(() => {
-    const savedData = localStorage.getItem('userData');
-    return savedData ? JSON.parse(savedData) : { coins: 100, decisions: {} };
-  });
+  const [userData, setUserData] = useState<UserData>({ coins: 100, decisions: {} });
 
-  // Save to localStorage whenever userData changes
-  React.useEffect(() => {
-    localStorage.setItem('userData', JSON.stringify(userData));
+  // Load data from Telegram CloudStorage or localStorage
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        if (window.Telegram?.WebApp?.CloudStorage) {
+          // Try to get from Telegram CloudStorage
+          const storedData = await new Promise<string | null>((resolve) => {
+            window.Telegram.WebApp.CloudStorage.getItem('userData', (error, result) => {
+              if (error) {
+                console.error('Error getting data from CloudStorage:', error);
+                resolve(null);
+              } else {
+                resolve(result);
+              }
+            });
+          });
+
+          if (storedData) {
+            setUserData(JSON.parse(storedData));
+          }
+        } else {
+          // Fallback to localStorage
+          const storedData = localStorage.getItem('userData');
+          if (storedData) {
+            setUserData(JSON.parse(storedData));
+          }
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      }
+    };
+
+    loadUserData();
+  }, []);
+
+  // Save to Telegram CloudStorage or localStorage whenever userData changes
+  useEffect(() => {
+    const saveUserData = async () => {
+      try {
+        const dataToSave = JSON.stringify(userData);
+
+        if (window.Telegram?.WebApp?.CloudStorage) {
+          // Save to Telegram CloudStorage
+          await new Promise<void>((resolve, reject) => {
+            window.Telegram.WebApp.CloudStorage.setItem('userData', dataToSave, (error) => {
+              if (error) {
+                console.error('Error saving to CloudStorage:', error);
+                reject(error);
+              } else {
+                resolve();
+              }
+            });
+          });
+        } else {
+          // Fallback to localStorage
+          localStorage.setItem('userData', dataToSave);
+        }
+      } catch (error) {
+        console.error('Error saving user data:', error);
+      }
+    };
+
+    saveUserData();
   }, [userData]);
 
   const addCoins = (amount: number) => {
