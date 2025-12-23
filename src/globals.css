@@ -10,17 +10,26 @@
 }
 
 /* Убираем overflow и фиксируем высоту */
+:root {
+  --tg-viewport-stable-height: var(--tg-viewport-height, 100vh); /* Используем переменную ТГ, она самая точная */
+  --app-height: var(--tg-viewport-stable-height, 100vh);
+}
+
 html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  height: 100dvh; /* Dynamic Viewport Height */
+  height: var(--app-height);
+  min-height: var(--app-height);
+  max-height: var(--app-height);
   width: 100vw;
   position: fixed;
 }
 
 #root {
-  height: 100dvh;
+  height: var(--app-height);
+  min-height: var(--app-height);
+  max-height: var(--app-height);
   width: 100vw;
   overflow: hidden;
 }

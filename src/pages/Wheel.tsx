@@ -23,19 +23,6 @@ const Wheel = () => {
     }
   }, [tg]);
 
-  // Показываем popup когда анимация завершена
-  useEffect(() => {
-    if (winner && isSpinning) {
-      // Показываем popup после завершения анимации (5 секунд)
-      const timer = setTimeout(() => {
-        setIsSpinning(false);
-        setShowPopup(true);
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [winner, isSpinning]);
-
   const handleSpin = async () => {
     if (userData.coins < 2) {
       tg?.HapticFeedback.notificationOccurred('error');
@@ -52,6 +39,11 @@ const Wheel = () => {
     const randomIndex = Math.floor(Math.random() * SERVICES.length);
     const selectedService = SERVICES[randomIndex];
     setWinner(selectedService); // Устанавливаем победителя до начала анимации
+  };
+
+  const handleAnimationComplete = () => {
+    setIsSpinning(false);
+    setShowPopup(true);
   };
 
   return (
@@ -105,7 +97,11 @@ const Wheel = () => {
 
           {/* Барабан - поднят на 100px */}
           <div className="flex-1 flex flex-col items-center justify-center px-4 pt-[50px]">
-            <Carousel isSpinning={isSpinning} winner={winner} />
+            <Carousel
+              isSpinning={isSpinning}
+              winner={winner}
+              onComplete={handleAnimationComplete}
+            />
           </div>
 
           {/* Кнопка "Крутить" в абсолютном позиционировании, поднята на 50px */}

@@ -5,9 +5,10 @@ import { SERVICES } from '../data/services';
 interface Props {
   isSpinning: boolean;
   winner: any;
+  onComplete?: () => void;
 }
 
-const Carousel = ({ isSpinning, winner }: Props) => {
+const Carousel = ({ isSpinning, winner, onComplete }: Props) => {
   const controls = useAnimation();
 
   // Оптимизируем количество дубликатов для производительности
@@ -19,31 +20,36 @@ const Carousel = ({ isSpinning, winner }: Props) => {
 
   useEffect(() => {
     if (isSpinning && winner) {
-      // Победитель уже определен, начинаем анимацию: плавное ускорение -> ускорение -> плавное замедление
+      // Победитель уже определен, начинаем анимацию: плавное ускорение -> замедление
       const winnerIndex = SERVICES.findIndex(s => s.id === winner.id);
-      const centerOffset = Math.floor(repeatedServices.length / 2);
 
-      // Высота одного элемента (карточка + gap)
-      const itemHeight = 190; // 180px карточка + 10px gap
+      // Количество полных кругов для разгона
+      const baseSpins = itemHeight * SERVICES.length * 5; // 5 полных кругов для разгона
 
-      // Финальная позиция - смещаем так, чтобы winnerIndex оказался в centerOffset
-      const offsetToCenter = centerOffset - winnerIndex;
-      const finalPosition = -offsetToCenter * itemHeight;
+      // Смещение для выравнивания победителя по центру
+      const winnerOffset = winnerIndex * itemHeight;
 
-      // Плавная анимация: медленное начало -> ускорение -> плавное замедление
+      // Конечная цель: основные обороты + смещение до нужного элемента
+      const finalTarget = -(baseSpins + winnerOffset);
+
+      // Единая плавная анимация к конечной точке
       controls.start({
-        y: [0, -6000, finalPosition], // Сначала старт, затем ускорение, затем плавное замедление к цели
+        y: finalTarget,
         transition: {
           duration: 5, // Общая продолжительность анимации
-          ease: [0.34, 1.56, 0.64, 1], // Эластичная функция для плавного ускорения и замедления
-          times: [0, 0.6, 1] // Временные метки: начало -> ускорение -> замедление
+          ease: [0.45, 0.05, 0.55, 0.95] // Кубическая кривая Безье для плавного старта, быстрого полета и мягкого финиша
+        }
+      }).then(() => {
+        // Вызываем onComplete после завершения анимации
+        if (onComplete) {
+          onComplete();
         }
       });
     } else {
       // Начальная позиция
       controls.set({ y: 0 });
     }
-  }, [isSpinning, winner, controls, repeatedServices]);
+  }, [isSpinning, winner, controls, repeatedServices, itemHeight, onComplete]);
 
 
   return (

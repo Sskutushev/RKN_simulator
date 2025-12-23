@@ -74,6 +74,17 @@ export const useTelegram = () => {
       tg.ready();
       tg.expand();
 
+      // Для Bot API 8.0+ запрашиваем настоящий Fullscreen (без хедера ТГ)
+      if (tg.isVersionAtLeast('8.0')) {
+        tg.requestFullscreen();
+      }
+
+      // Отключаем вертикальные свипы, чтобы пользователь
+      // случайно не закрыл приложение, когда крутит барабан
+      if (tg.isVersionAtLeast('7.7')) {
+        tg.disableVerticalSwipes();
+      }
+
       // Получаем Safe Area Insets
       setSafeAreaInsets({
         top: tg.safeAreaInset?.top || 0,
